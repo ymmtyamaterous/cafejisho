@@ -1,7 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import ReactMarkdown from "react-markdown";
+import { toast } from "sonner";
 
+import { authClient } from "@/lib/auth-client";
 import { orpc } from "@/utils/orpc";
 
 export const Route = createFileRoute("/glossary/$termId")({
@@ -20,10 +22,46 @@ const CATEGORY_LABEL: Record<string, string> = {
 
 function TermDetailPage() {
   const { termId } = Route.useParams();
+  const { data: session } = authClient.useSession();
+  const queryClient = useQueryClient();
 
   const { data: term, isLoading } = useQuery(
     orpc.glossary.getById.queryOptions({ input: { termId } }),
   );
+
+  const { data: myBookmarks = [] } = useQuery({
+    ...orpc.bookmarks.list.queryOptions({ input: { type: "glossary" } }),
+    enabled: !!session,
+  });
+
+  const addBookmarkMutation = useMutation({
+    ...orpc.bookmarks.add.mutationOptions(),
+    onSuccess: () => {
+      toast.success("ブックマークに追加しました 🔖");
+      queryClient.invalidateQueries();
+    },
+    onError: () => toast.error("ブックマークの追加に失敗しました"),
+  });
+
+  const removeBookmarkMutation = useMutation({
+    ...orpc.bookmarks.remove.mutationOptions(),
+    onSuccess: () => {
+      toast.success("ブックマークを削除しました");
+      queryClient.invalidateQueries();
+    },
+    onError: () => toast.error("ブックマークの削除に失敗しました"),
+  });
+
+  const isBookmarked = myBookmarks.some((b) => b.targetId === termId);
+  const bookmarkId = myBookmarks.find((b) => b.targetId === termId)?.id;
+
+  const handleBookmark = () => {
+    if (isBookmarked && bookmarkId) {
+      removeBookmarkMutation.mutate({ bookmarkId });
+    } else {
+      addBookmarkMutation.mutate({ type: "glossary", targetId: termId });
+    }
+  };
 
   // 関連用語の取得
   const relatedTermIds = term?.relatedTermIds ?? [];
@@ -166,7 +204,7 @@ function TermDetailPage() {
           </div>
         )}
 
-        <div className="mt-8">
+        <div className="flex items-center gap-3 mt-8">
           <Link
             to="/glossary"
             className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl no-underline text-sm font-extrabold transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5"
@@ -179,6 +217,22 @@ function TermDetailPage() {
           >
             ← 辞典一覧に戻る
           </Link>
+          {session && (
+            <button
+              type="button"
+              onClick={handleBookmark}
+              disabled={addBookmarkMutation.isPending || removeBookmarkMutation.isPending}
+              className="px-5 py-3 text-sm font-black rounded-2xl cursor-pointer transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-50"
+              style={{
+                background: isBookmarked ? "#E8C99A" : "#F5EFE0",
+                border: "2px solid #2C1A0E",
+                boxShadow: "3px 3px 0 #2C1A0E",
+                color: "#2C1A0E",
+              }}
+            >
+              {isBookmarked ? "🔖 ブックマーク済み" : "🔖 ブックマーク"}
+            </button>
+          )}
         </div>
       </div>
     </div>

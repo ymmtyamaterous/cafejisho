@@ -29,6 +29,11 @@ function LessonDetailPage() {
     enabled: !!session,
   });
 
+  const { data: myBookmarks = [] } = useQuery({
+    ...orpc.bookmarks.list.queryOptions({ input: { type: "lesson" } }),
+    enabled: !!session,
+  });
+
   const completeMutation = useMutation({
     ...orpc.lessons.complete.mutationOptions(),
     onSuccess: () => {
@@ -45,6 +50,35 @@ function LessonDetailPage() {
       toast.error(`エラー: ${err.message}`);
     },
   });
+
+  const addBookmarkMutation = useMutation({
+    ...orpc.bookmarks.add.mutationOptions(),
+    onSuccess: () => {
+      toast.success("ブックマークに追加しました 🔖");
+      queryClient.invalidateQueries();
+    },
+    onError: () => toast.error("ブックマークの追加に失敗しました"),
+  });
+
+  const removeBookmarkMutation = useMutation({
+    ...orpc.bookmarks.remove.mutationOptions(),
+    onSuccess: () => {
+      toast.success("ブックマークを削除しました");
+      queryClient.invalidateQueries();
+    },
+    onError: () => toast.error("ブックマークの削除に失敗しました"),
+  });
+
+  const isBookmarked = myBookmarks.some((b) => b.targetId === lessonId);
+  const bookmarkId = myBookmarks.find((b) => b.targetId === lessonId)?.id;
+
+  const handleBookmark = () => {
+    if (isBookmarked && bookmarkId) {
+      removeBookmarkMutation.mutate({ bookmarkId });
+    } else {
+      addBookmarkMutation.mutate({ type: "lesson", targetId: lessonId });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -257,6 +291,22 @@ function LessonDetailPage() {
             >
               ログインして進捗を記録する ✨
             </Link>
+          )}
+          {session && (
+            <button
+              type="button"
+              onClick={handleBookmark}
+              disabled={addBookmarkMutation.isPending || removeBookmarkMutation.isPending}
+              className="px-6 py-3 text-sm font-black rounded-2xl cursor-pointer transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-50"
+              style={{
+                background: isBookmarked ? "#E8C99A" : "#F5EFE0",
+                border: "2px solid #2C1A0E",
+                boxShadow: "3px 3px 0 #2C1A0E",
+                color: "#2C1A0E",
+              }}
+            >
+              {isBookmarked ? "🔖 ブックマーク済み" : "🔖 ブックマーク"}
+            </button>
           )}
         </div>
 

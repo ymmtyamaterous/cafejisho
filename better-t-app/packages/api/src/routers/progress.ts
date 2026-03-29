@@ -64,6 +64,7 @@ export const progressRouter = {
     return {
       completedLessonIds,
       courseProgress,
+      totalQuizScore: quizResults.reduce((sum, r) => sum + r.score, 0),
       quizResults,
     };
   }),
@@ -98,6 +99,42 @@ export const progressRouter = {
           ) / 10
         : 0;
 
+    // 総学習時間（完了レッスンの合計 durationMinutes）
+    let totalStudyMinutes = 0;
+    if (completions.length > 0) {
+      const completedLessonIds = completions.map((c) => c.lessonId);
+      const lessonRows = await db
+        .select({ id: lesson.id, durationMinutes: lesson.durationMinutes })
+        .from(lesson);
+      for (const l of lessonRows) {
+        if (completedLessonIds.includes(l.id)) {
+          totalStudyMinutes += l.durationMinutes;
+        }
+      }
+    }
+
+    // 継続学習日数（今日を含む連続した日数）
+    let currentStreak = 0;
+    if (completions.length > 0) {
+      const dateSet = new Set(
+        completions.map((c) => {
+          const d = new Date(c.completedAt);
+          return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+        }),
+      );
+      const today = new Date();
+      for (let i = 0; i < 365; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+        if (dateSet.has(key)) {
+          currentStreak++;
+        } else {
+          break;
+        }
+      }
+    }
+
     // 直近5件のレッスン
     const recentLessons = await Promise.all(
       completions.slice(0, 5).map(async (c) => {
@@ -116,6 +153,8 @@ export const progressRouter = {
 
     return {
       totalCompletedLessons: completions.length,
+      totalStudyMinutes,
+      currentStreak,
       totalQuizAttempts,
       averageQuizScore,
       recentLessons,

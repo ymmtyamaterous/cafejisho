@@ -10,6 +10,7 @@ export default function Header() {
     { to: "/courses", label: "🌱 コース" },
     { to: "/glossary", label: "📖 辞典" },
     { to: "/origins", label: "🗺️ 産地" },
+    { to: "/quiz", label: "🎯 クイズ" },
   ] as const;
 
   return (

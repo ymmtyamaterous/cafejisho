@@ -9,11 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PremiumRouteImport } from './routes/premium'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BookmarksRouteImport } from './routes/bookmarks'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as QuizIndexRouteImport } from './routes/quiz/index'
 import { Route as OriginsIndexRouteImport } from './routes/origins/index'
 import { Route as GlossaryIndexRouteImport } from './routes/glossary/index'
 import { Route as CoursesIndexRouteImport } from './routes/courses/index'
@@ -23,6 +26,16 @@ import { Route as GlossaryTermIdRouteImport } from './routes/glossary/$termId'
 import { Route as CoursesCourseIdIndexRouteImport } from './routes/courses/$courseId/index'
 import { Route as CoursesCourseIdLessonsLessonIdRouteImport } from './routes/courses/$courseId/lessons/$lessonId'
 
+const PremiumRoute = PremiumRouteImport.update({
+  id: '/premium',
+  path: '/premium',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -46,6 +59,11 @@ const BookmarksRoute = BookmarksRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizIndexRoute = QuizIndexRouteImport.update({
+  id: '/quiz/',
+  path: '/quiz/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OriginsIndexRoute = OriginsIndexRouteImport.update({
@@ -93,30 +111,36 @@ const CoursesCourseIdLessonsLessonIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bookmarks': typeof BookmarksRoute
+  '/premium': typeof PremiumRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
+  '/signup': typeof SignupRoute
   '/glossary/$termId': typeof GlossaryTermIdRoute
   '/origins/$originId': typeof OriginsOriginIdRoute
   '/quiz/$quizId': typeof QuizQuizIdRoute
   '/courses/': typeof CoursesIndexRoute
   '/glossary/': typeof GlossaryIndexRoute
   '/origins/': typeof OriginsIndexRoute
+  '/quiz/': typeof QuizIndexRoute
   '/courses/$courseId/': typeof CoursesCourseIdIndexRoute
   '/courses/$courseId/lessons/$lessonId': typeof CoursesCourseIdLessonsLessonIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bookmarks': typeof BookmarksRoute
+  '/premium': typeof PremiumRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
+  '/signup': typeof SignupRoute
   '/glossary/$termId': typeof GlossaryTermIdRoute
   '/origins/$originId': typeof OriginsOriginIdRoute
   '/quiz/$quizId': typeof QuizQuizIdRoute
   '/courses': typeof CoursesIndexRoute
   '/glossary': typeof GlossaryIndexRoute
   '/origins': typeof OriginsIndexRoute
+  '/quiz': typeof QuizIndexRoute
   '/courses/$courseId': typeof CoursesCourseIdIndexRoute
   '/courses/$courseId/lessons/$lessonId': typeof CoursesCourseIdLessonsLessonIdRoute
 }
@@ -124,15 +148,18 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/bookmarks': typeof BookmarksRoute
+  '/premium': typeof PremiumRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
+  '/signup': typeof SignupRoute
   '/glossary/$termId': typeof GlossaryTermIdRoute
   '/origins/$originId': typeof OriginsOriginIdRoute
   '/quiz/$quizId': typeof QuizQuizIdRoute
   '/courses/': typeof CoursesIndexRoute
   '/glossary/': typeof GlossaryIndexRoute
   '/origins/': typeof OriginsIndexRoute
+  '/quiz/': typeof QuizIndexRoute
   '/courses/$courseId/': typeof CoursesCourseIdIndexRoute
   '/courses/$courseId/lessons/$lessonId': typeof CoursesCourseIdLessonsLessonIdRoute
 }
@@ -141,45 +168,54 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/bookmarks'
+    | '/premium'
     | '/dashboard'
     | '/login'
     | '/profile'
+    | '/signup'
     | '/glossary/$termId'
     | '/origins/$originId'
     | '/quiz/$quizId'
     | '/courses/'
     | '/glossary/'
     | '/origins/'
+    | '/quiz/'
     | '/courses/$courseId/'
     | '/courses/$courseId/lessons/$lessonId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/bookmarks'
+    | '/premium'
     | '/dashboard'
     | '/login'
     | '/profile'
+    | '/signup'
     | '/glossary/$termId'
     | '/origins/$originId'
     | '/quiz/$quizId'
     | '/courses'
     | '/glossary'
     | '/origins'
+    | '/quiz'
     | '/courses/$courseId'
     | '/courses/$courseId/lessons/$lessonId'
   id:
     | '__root__'
     | '/'
     | '/bookmarks'
+    | '/premium'
     | '/dashboard'
     | '/login'
     | '/profile'
+    | '/signup'
     | '/glossary/$termId'
     | '/origins/$originId'
     | '/quiz/$quizId'
     | '/courses/'
     | '/glossary/'
     | '/origins/'
+    | '/quiz/'
     | '/courses/$courseId/'
     | '/courses/$courseId/lessons/$lessonId'
   fileRoutesById: FileRoutesById
@@ -187,21 +223,38 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BookmarksRoute: typeof BookmarksRoute
+  PremiumRoute: typeof PremiumRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
+  SignupRoute: typeof SignupRoute
   GlossaryTermIdRoute: typeof GlossaryTermIdRoute
   OriginsOriginIdRoute: typeof OriginsOriginIdRoute
   QuizQuizIdRoute: typeof QuizQuizIdRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   GlossaryIndexRoute: typeof GlossaryIndexRoute
   OriginsIndexRoute: typeof OriginsIndexRoute
+  QuizIndexRoute: typeof QuizIndexRoute
   CoursesCourseIdIndexRoute: typeof CoursesCourseIdIndexRoute
   CoursesCourseIdLessonsLessonIdRoute: typeof CoursesCourseIdLessonsLessonIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/premium': {
+      id: '/premium'
+      path: '/premium'
+      fullPath: '/premium'
+      preLoaderRoute: typeof PremiumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -235,6 +288,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz/': {
+      id: '/quiz/'
+      path: '/quiz'
+      fullPath: '/quiz/'
+      preLoaderRoute: typeof QuizIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/origins/': {
@@ -299,15 +359,18 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BookmarksRoute: BookmarksRoute,
+  PremiumRoute: PremiumRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
+  SignupRoute: SignupRoute,
   GlossaryTermIdRoute: GlossaryTermIdRoute,
   OriginsOriginIdRoute: OriginsOriginIdRoute,
   QuizQuizIdRoute: QuizQuizIdRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   GlossaryIndexRoute: GlossaryIndexRoute,
   OriginsIndexRoute: OriginsIndexRoute,
+  QuizIndexRoute: QuizIndexRoute,
   CoursesCourseIdIndexRoute: CoursesCourseIdIndexRoute,
   CoursesCourseIdLessonsLessonIdRoute: CoursesCourseIdLessonsLessonIdRoute,
 }
