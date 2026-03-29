@@ -188,84 +188,6 @@ const LEVEL_LABEL: Record<string, string> = {
   advanced: "上級 · ADVANCED",
 };
 
-// ── フッター ──────────────────────────────────────────────
-function Footer() {
-  return (
-    <footer style={{ background: "#2C1A0E", borderTop: "3px solid #C49A6C" }}>
-      <div className="max-w-6xl mx-auto px-6 pt-10 pb-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* ブランド */}
-          <div>
-            <div
-              className="text-2xl font-black mb-2 flex items-center gap-1"
-              style={{ fontFamily: "'Zen Maru Gothic', sans-serif", color: "#F5EFE0" }}
-            >
-              ☕ cafe<span style={{ color: "#C49A6C" }}>jisho</span>
-            </div>
-            <p className="text-xs font-bold leading-relaxed max-w-48" style={{ color: "rgba(245,239,224,0.4)" }}>
-              コーヒーを、もっと楽しく。知識でコーヒーはもっとおいしくなる！
-            </p>
-          </div>
-
-          {/* 学ぶ */}
-          <div>
-            <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "#C49A6C" }}>
-              学ぶ
-            </p>
-            <ul className="space-y-2">
-              {["入門コース", "産地辞典", "焙煎ガイド", "抽出法一覧"].map((item) => (
-                <li key={item} className="text-sm font-bold cursor-pointer transition-colors" style={{ color: "rgba(245,239,224,0.4)" }}>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* 辞典 */}
-          <div>
-            <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "#C49A6C" }}>
-              辞典
-            </p>
-            <ul className="space-y-2">
-              {["用語集", "農園マップ", "品種図鑑", "フレーバー表"].map((item) => (
-                <li key={item} className="text-sm font-bold cursor-pointer transition-colors" style={{ color: "rgba(245,239,224,0.4)" }}>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* その他 */}
-          <div>
-            <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "#C49A6C" }}>
-              その他
-            </p>
-            <ul className="space-y-2">
-              {["コミュニティ", "マガジン", "お問い合わせ", "プレミアム ⭐"].map((item) => (
-                <li key={item} className="text-sm font-bold cursor-pointer transition-colors" style={{ color: "rgba(245,239,224,0.4)" }}>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div
-          className="flex flex-col md:flex-row items-center justify-between pt-4 gap-2"
-          style={{ borderTop: "1px solid rgba(196,154,108,0.12)" }}
-        >
-          <span className="text-xs font-bold" style={{ color: "rgba(245,239,224,0.22)" }}>
-            © 2026 cafejisho — コーヒーの知識を、すべての人へ ☕
-          </span>
-          <span className="text-xs font-bold" style={{ color: "rgba(245,239,224,0.22)" }}>
-            プライバシー · 利用規約
-          </span>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
 // ── メインページ ──────────────────────────────────────────
 function HomeComponent() {
   const coursesQuery = useQuery(orpc.courses.list.queryOptions({ input: {} }));
@@ -499,8 +421,6 @@ function HomeComponent() {
         </svg>
       </div>
 
-      {/* ── フッター ── */}
-      <Footer />
     </div>
   );
 }
