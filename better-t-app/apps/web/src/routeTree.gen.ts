@@ -9,9 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BookmarksRouteImport } from './routes/bookmarks'
@@ -26,11 +26,6 @@ import { Route as GlossaryTermIdRouteImport } from './routes/glossary/$termId'
 import { Route as CoursesCourseIdIndexRouteImport } from './routes/courses/$courseId/index'
 import { Route as CoursesCourseIdLessonsLessonIdRouteImport } from './routes/courses/$courseId/lessons/$lessonId'
 
-const PremiumRoute = PremiumRouteImport.update({
-  id: '/premium',
-  path: '/premium',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -39,6 +34,11 @@ const SignupRoute = SignupRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PremiumRoute = PremiumRouteImport.update({
+  id: '/premium',
+  path: '/premium',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -111,9 +111,9 @@ const CoursesCourseIdLessonsLessonIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bookmarks': typeof BookmarksRoute
-  '/premium': typeof PremiumRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/premium': typeof PremiumRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/glossary/$termId': typeof GlossaryTermIdRoute
@@ -129,9 +129,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bookmarks': typeof BookmarksRoute
-  '/premium': typeof PremiumRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/premium': typeof PremiumRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/glossary/$termId': typeof GlossaryTermIdRoute
@@ -148,9 +148,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/bookmarks': typeof BookmarksRoute
-  '/premium': typeof PremiumRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/premium': typeof PremiumRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/glossary/$termId': typeof GlossaryTermIdRoute
@@ -168,9 +168,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/bookmarks'
-    | '/premium'
     | '/dashboard'
     | '/login'
+    | '/premium'
     | '/profile'
     | '/signup'
     | '/glossary/$termId'
@@ -186,9 +186,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/bookmarks'
-    | '/premium'
     | '/dashboard'
     | '/login'
+    | '/premium'
     | '/profile'
     | '/signup'
     | '/glossary/$termId'
@@ -204,9 +204,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/bookmarks'
-    | '/premium'
     | '/dashboard'
     | '/login'
+    | '/premium'
     | '/profile'
     | '/signup'
     | '/glossary/$termId'
@@ -223,9 +223,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BookmarksRoute: typeof BookmarksRoute
-  PremiumRoute: typeof PremiumRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
+  PremiumRoute: typeof PremiumRoute
   ProfileRoute: typeof ProfileRoute
   SignupRoute: typeof SignupRoute
   GlossaryTermIdRoute: typeof GlossaryTermIdRoute
@@ -241,13 +241,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/premium': {
-      id: '/premium'
-      path: '/premium'
-      fullPath: '/premium'
-      preLoaderRoute: typeof PremiumRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -260,6 +253,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/premium': {
+      id: '/premium'
+      path: '/premium'
+      fullPath: '/premium'
+      preLoaderRoute: typeof PremiumRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -359,9 +359,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BookmarksRoute: BookmarksRoute,
-  PremiumRoute: PremiumRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
+  PremiumRoute: PremiumRoute,
   ProfileRoute: ProfileRoute,
   SignupRoute: SignupRoute,
   GlossaryTermIdRoute: GlossaryTermIdRoute,
