@@ -97,6 +97,11 @@ function ProfilePage() {
               <div className="text-sm font-bold mt-1" style={{ color: "#C49A6C" }}>
                 {user?.email}
               </div>
+              <div className="text-xs font-bold mt-1" style={{ color: "rgba(196,154,108,0.6)" }}>
+                {user?.createdAt
+                  ? `入会: ${new Date(user.createdAt).toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" })}`
+                  : ""}
+              </div>
             </div>
             <button
               type="button"
@@ -122,14 +127,15 @@ function ProfilePage() {
         </div>
 
         {/* 統計サマリー */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4 mb-6">
           {[
             { icon: "✅", value: stats?.totalCompletedLessons ?? 0, label: "完了レッスン" },
+            { icon: "🔥", value: stats?.currentStreak ?? 0, label: "継続日数" },
             { icon: "🎯", value: `${stats?.averageQuizScore ?? 0}%`, label: "平均スコア" },
           ].map(({ icon, value, label }) => (
             <div
               key={label}
-              className="rounded-2xl px-6 py-5 text-center"
+              className="rounded-2xl px-4 py-5 text-center"
               style={{
                 background: "#fff",
                 border: "2px solid #2C1A0E",
@@ -148,6 +154,49 @@ function ProfilePage() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* バッジセクション */}
+        <div
+          className="rounded-2xl px-7 py-6"
+          style={{
+            background: "#fff",
+            border: "2px solid #2C1A0E",
+            boxShadow: "3px 3px 0 #2C1A0E",
+          }}
+        >
+          <h2
+            className="text-lg font-black mb-4"
+            style={{ fontFamily: "'Zen Maru Gothic', sans-serif", color: "#2C1A0E" }}
+          >
+            🏅 獲得バッジ
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {[
+              { emoji: "🌱", name: "入門者", condition: (stats?.totalCompletedLessons ?? 0) >= 1, desc: "初めてレッスン完了" },
+              { emoji: "📖", name: "学習者", condition: (stats?.totalCompletedLessons ?? 0) >= 5, desc: "5レッスン完了" },
+              { emoji: "🔥", name: "継続者", condition: (stats?.currentStreak ?? 0) >= 3, desc: "3日連続学習" },
+              { emoji: "🎯", name: "クイズ王", condition: (stats?.averageQuizScore ?? 0) >= 80, desc: "平均80%以上" },
+              { emoji: "🏆", name: "エキスパート", condition: (stats?.totalCompletedLessons ?? 0) >= 20, desc: "20レッスン完了" },
+              { emoji: "⭐", name: "プレミアム", condition: false, desc: "プレミアム会員" },
+            ].map(({ emoji, name, condition, desc }) => (
+              <div
+                key={name}
+                className="flex flex-col items-center gap-1 px-4 py-3 rounded-2xl transition-all duration-150"
+                style={{
+                  background: condition ? "#E8C99A" : "#F5EFE0",
+                  border: `2px solid ${condition ? "#2C1A0E" : "#C49A6C"}`,
+                  boxShadow: condition ? "2px 2px 0 #2C1A0E" : "none",
+                  opacity: condition ? 1 : 0.4,
+                  minWidth: "72px",
+                }}
+              >
+                <span className="text-2xl">{emoji}</span>
+                <span className="text-xs font-black" style={{ color: "#2C1A0E" }}>{name}</span>
+                <span className="text-xs font-bold text-center leading-tight" style={{ color: "#6B3D1E", fontSize: "10px" }}>{desc}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -63,16 +63,16 @@ function RouteComponent() {
             bg="#E8C99A"
           />
           <StatCard
+            icon="🔥"
+            value={stats?.currentStreak ?? 0}
+            label="学習継続日数"
+            bg="#C49A6C"
+          />
+          <StatCard
             icon="🎯"
             value={`${stats?.averageQuizScore ?? 0}%`}
             label="平均クイズスコア"
             bg="#F5EFE0"
-          />
-          <StatCard
-            icon="📚"
-            value={courses.reduce((s, c) => s + c.lessonCount, 0)}
-            label="総レッスン数"
-            bg="#C49A6C"
           />
         </div>
 

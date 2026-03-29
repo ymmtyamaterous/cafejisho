@@ -31,6 +31,17 @@ function QuizPage() {
     orpc.quizzes.getByLessonId.queryOptions({ input: { lessonId: quizId } }),
   );
 
+  // レッスン情報（courseId取得用）
+  const { data: lessonData } = useQuery(
+    orpc.lessons.getById.queryOptions({ input: { lessonId: quizId } }),
+  );
+
+  // コース情報（次のレッスン取得用）
+  const { data: courseData } = useQuery({
+    ...orpc.courses.getById.queryOptions({ input: { courseId: lessonData?.courseId ?? "" } }),
+    enabled: !!lessonData?.courseId,
+  });
+
   const submitMutation = useMutation({
     ...orpc.quizzes.submit.mutationOptions(),
     onSuccess: (data) => {
@@ -86,6 +97,11 @@ function QuizPage() {
   // 結果画面
   if (result) {
     const pct = result.total > 0 ? Math.round((result.score / result.total) * 100) : 0;
+
+    // 次のレッスンを特定
+    const currentLessonIdx = courseData?.lessons.findIndex((l) => l.id === quizId) ?? -1;
+    const nextLesson = currentLessonIdx >= 0 ? courseData?.lessons[currentLessonIdx + 1] : undefined;
+    const courseId = lessonData?.courseId;
     return (
       <div className="min-h-screen" style={{ background: "#FAF7F2", fontFamily: "'Nunito', sans-serif" }}>
         <div className="max-w-2xl mx-auto px-6 py-10">
@@ -161,18 +177,48 @@ function QuizPage() {
             >
               🔄 もう一度挑戦
             </button>
-            <Link
-              to="/courses"
-              className="px-6 py-3 text-sm font-black rounded-2xl no-underline transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5"
-              style={{
-                background: "#2C1A0E",
-                border: "2.5px solid #2C1A0E",
-                boxShadow: "4px 4px 0 #6B3D1E",
-                color: "#F5EFE0",
-              }}
-            >
-              📚 コース一覧へ
-            </Link>
+            {nextLesson && courseId ? (
+              <Link
+                to="/courses/$courseId/lessons/$lessonId"
+                params={{ courseId, lessonId: nextLesson.id }}
+                className="px-6 py-3 text-sm font-black rounded-2xl no-underline transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5"
+                style={{
+                  background: "#2C1A0E",
+                  border: "2.5px solid #2C1A0E",
+                  boxShadow: "4px 4px 0 #6B3D1E",
+                  color: "#F5EFE0",
+                }}
+              >
+                次のレッスンへ →
+              </Link>
+            ) : courseId ? (
+              <Link
+                to="/courses/$courseId"
+                params={{ courseId }}
+                className="px-6 py-3 text-sm font-black rounded-2xl no-underline transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5"
+                style={{
+                  background: "#2C1A0E",
+                  border: "2.5px solid #2C1A0E",
+                  boxShadow: "4px 4px 0 #6B3D1E",
+                  color: "#F5EFE0",
+                }}
+              >
+                📚 コースへ戻る
+              </Link>
+            ) : (
+              <Link
+                to="/courses"
+                className="px-6 py-3 text-sm font-black rounded-2xl no-underline transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5"
+                style={{
+                  background: "#2C1A0E",
+                  border: "2.5px solid #2C1A0E",
+                  boxShadow: "4px 4px 0 #6B3D1E",
+                  color: "#F5EFE0",
+                }}
+              >
+                📚 コース一覧へ
+              </Link>
+            )}
           </div>
         </div>
       </div>

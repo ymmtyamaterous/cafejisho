@@ -370,7 +370,7 @@ function HomeComponent() {
         {[
           { num: "120+", label: "☕ コーヒー用語", bg: "#E8C99A" },
           { num: "30", label: "🌍 産地・農園", bg: "#F5EFE0" },
-          { num: "12", label: "🔬 抽出法ガイド", bg: "#C49A6C" },
+          { num: "42", label: "📚 レッスン", bg: "#C49A6C" },
           { num: "無料", label: "🎉 基礎コース全部", bg: "#2C1A0E", dark: true },
         ].map(({ num, label, bg, dark }) => (
           <div
