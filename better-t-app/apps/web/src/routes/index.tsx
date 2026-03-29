@@ -201,16 +201,6 @@ function HomeComponent() {
         fontFamily: "'Nunito', sans-serif",
       }}
     >
-      {/* ドットパターン背景 */}
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{
-          backgroundImage: "radial-gradient(circle, rgba(196,154,108,0.2) 2px, transparent 2px)",
-          backgroundSize: "26px 26px",
-          zIndex: 0,
-        }}
-      />
-
       {/* ── ヒーローセクション ── */}
       <section className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-6 md:px-10 py-10 max-w-6xl mx-auto">
         {/* 左カラム */}
@@ -267,7 +257,7 @@ function HomeComponent() {
               無料で学ぶ 🚀
             </Link>
             <Link
-              to="/glossary"
+              to="/quiz"
               className="px-6 py-3 text-sm font-black rounded-2xl no-underline transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5"
               style={{
                 background: "#F5EFE0",
@@ -276,7 +266,7 @@ function HomeComponent() {
                 color: "#2C1A0E",
               }}
             >
-              辞典を見る 📖
+              クイズに挑戦 🎯
             </Link>
           </div>
         </div>

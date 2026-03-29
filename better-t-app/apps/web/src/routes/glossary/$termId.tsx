@@ -253,13 +253,13 @@ function RelatedTerms({ termIds }: { termIds: string[] }) {
   if (terms.length === 0) return null;
 
   return (
-    <div className="flex gap-3 flex-wrap">
+    <div className="flex gap-3 overflow-x-auto pb-2">
       {terms.map((term) => (
         <Link
           key={term.id}
           to="/glossary/$termId"
           params={{ termId: term.id }}
-          className="px-4 py-2 rounded-2xl no-underline text-sm font-extrabold transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5"
+          className="px-4 py-2 rounded-2xl no-underline text-sm font-extrabold transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5 flex-shrink-0"
           style={{
             background: "#F5EFE0",
             border: "2px solid #2C1A0E",

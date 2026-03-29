@@ -40,10 +40,9 @@ function LessonDetailPage() {
       toast.success("レッスン完了！🎉");
       queryClient.invalidateQueries({ queryKey: ["lessons", "getCompletedIds", { courseId }] });
 
-      // クイズがある場合はクイズへ遷移
+      // クイズがある場合はクイズへ遷移（lessonId をクイズルートのパラメータとして使用）
       if (lesson?.hasQuiz) {
-        // クイズIDはレッスンIDから取得するためにquizzesルーターを使う
-        navigate({ to: "/courses/$courseId", params: { courseId } });
+        navigate({ to: "/quiz/$quizId", params: { quizId: lessonId } });
       }
     },
     onError: (err) => {
@@ -109,7 +108,79 @@ function LessonDetailPage() {
 
   return (
     <div className="min-h-screen" style={{ background: "#FAF7F2", fontFamily: "'Nunito', sans-serif" }}>
-      <div className="max-w-3xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-8 lg:grid lg:grid-cols-[280px_1fr] lg:gap-8 lg:items-start">
+
+        {/* PC サイドバー */}
+        <aside className="hidden lg:block sticky top-8">
+          <div
+            className="rounded-2xl overflow-hidden"
+            style={{
+              border: "2px solid #2C1A0E",
+              boxShadow: "4px 4px 0 #2C1A0E",
+            }}
+          >
+            {/* サイドバーヘッダー */}
+            <div className="px-4 py-3" style={{ background: "#2C1A0E" }}>
+              <div className="text-xs font-black mb-0.5" style={{ color: "#C49A6C" }}>
+                {course?.title ?? "コース"}
+              </div>
+              <div className="text-xs font-bold" style={{ color: "rgba(245,239,224,0.6)" }}>
+                {completedIds.filter((id) => lessons.some((l) => l.id === id)).length} / {lessons.length} 完了
+              </div>
+              {/* 進捗バー */}
+              <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.2)" }}>
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: lessons.length > 0
+                      ? `${Math.round((completedIds.filter((id) => lessons.some((l) => l.id === id)).length / lessons.length) * 100)}%`
+                      : "0%",
+                    background: "#C49A6C",
+                  }}
+                />
+              </div>
+            </div>
+            {/* レッスン一覧 */}
+            <div className="max-h-[70vh] overflow-y-auto" style={{ background: "#FAF7F2" }}>
+              {lessons.map((l, idx) => {
+                const isDoneSide = completedIds.includes(l.id);
+                const isCurrent = l.id === lessonId;
+                return (
+                  <Link
+                    key={l.id}
+                    to="/courses/$courseId/lessons/$lessonId"
+                    params={{ courseId, lessonId: l.id }}
+                    className="flex items-center gap-3 px-4 py-3 no-underline transition-colors duration-100"
+                    style={{
+                      background: isCurrent ? "#E8C99A" : "transparent",
+                      borderBottom: "1px solid rgba(44,26,14,0.08)",
+                    }}
+                  >
+                    <div
+                      className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-black"
+                      style={{
+                        background: isDoneSide ? "#2C1A0E" : isCurrent ? "#C49A6C" : "#E8C99A",
+                        color: isDoneSide ? "#F5EFE0" : "#2C1A0E",
+                      }}
+                    >
+                      {isDoneSide ? "✓" : idx + 1}
+                    </div>
+                    <span
+                      className="text-xs font-extrabold leading-tight line-clamp-2"
+                      style={{ color: isCurrent ? "#2C1A0E" : isDoneSide ? "#6B3D1E" : "#2C1A0E" }}
+                    >
+                      {l.title}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </aside>
+
+        {/* メインコンテンツ */}
+        <div className="min-w-0">
+          <div className="max-w-3xl">
         {/* パンくず */}
         <nav className="flex items-center gap-2 text-xs font-bold mb-6" style={{ color: "#C49A6C" }}>
           <Link to="/courses" className="no-underline hover:underline" style={{ color: "#C49A6C" }}>
@@ -265,8 +336,8 @@ function LessonDetailPage() {
           )}
           {session && isDone && lesson.hasQuiz && (
             <Link
-              to="/courses/$courseId"
-              params={{ courseId }}
+              to="/quiz/$quizId"
+              params={{ quizId: lessonId }}
               className="flex-1 py-3 text-sm font-black text-center rounded-2xl no-underline transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5"
               style={{
                 background: "#C49A6C",
@@ -357,6 +428,8 @@ function LessonDetailPage() {
               コース完了 🎉
             </Link>
           )}
+        </div>
+          </div>
         </div>
       </div>
     </div>

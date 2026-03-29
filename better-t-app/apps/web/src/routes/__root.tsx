@@ -54,9 +54,18 @@ function RootComponent() {
         disableTransitionOnChange
         storageKey="cafe-jisho-theme"
       >
-        <div className="min-h-screen flex flex-col bg-coffee-bg">
+        <div className="min-h-screen flex flex-col bg-coffee-bg relative">
+          {/* グローバルドットパターン背景 */}
+          <div
+            className="fixed inset-0 pointer-events-none"
+            style={{
+              backgroundImage: "radial-gradient(circle, rgba(196,154,108,0.15) 2px, transparent 2px)",
+              backgroundSize: "26px 26px",
+              zIndex: 0,
+            }}
+          />
           <Header />
-          <main className="flex-1">
+          <main className="flex-1 relative z-10">
             <Outlet />
           </main>
           <Footer />

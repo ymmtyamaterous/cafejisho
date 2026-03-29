@@ -25,7 +25,36 @@ function RouteComponent() {
   const { data: progress } = useQuery(orpc.progress.getMine.queryOptions());
   const { data: courses = [] } = useQuery(orpc.courses.list.queryOptions({ input: {} }));
 
+  // 各コースの詳細レッスン一覧を取得
+  const courseDetailsQueries = courses.map((course) =>
+    orpc.courses.getById.queryOptions({ input: { courseId: course.id } }),
+  );
+  const courseDetailsResults = courseDetailsQueries.map((q) => useQuery(q));
+
   const user = session.data?.user;
+
+  // おすすめ次のレッスン: 各コースで進行中（1レッスン以上完了 & 未完了あり）のコースの最初の未完了レッスン
+  const completedIds = progress?.completedLessonIds ?? [];
+  const nextLessons = courseDetailsResults
+    .map((r, idx) => {
+      const courseDetail = r.data;
+      if (!courseDetail) return null;
+      const lessons = courseDetail.lessons;
+      const completedInCourse = lessons.filter((l) => completedIds.includes(l.id)).length;
+      // 1レッスン以上完了 & 全未完了ではないコースのみ
+      if (completedInCourse === 0 || completedInCourse === lessons.length) return null;
+      const nextLesson = lessons.find((l) => !completedIds.includes(l.id));
+      if (!nextLesson) return null;
+      return {
+        courseId: courseDetail.id,
+        courseTitle: courseDetail.title,
+        courseEmoji: courseDetail.thumbnailEmoji,
+        lesson: nextLesson,
+        progress: completedInCourse,
+        total: lessons.length,
+      };
+    })
+    .filter((x): x is NonNullable<typeof x> => x !== null);
 
   return (
     <div className="min-h-screen" style={{ background: "#FAF7F2", fontFamily: "'Nunito', sans-serif" }}>
@@ -138,6 +167,51 @@ function RouteComponent() {
             })}
           </div>
         </div>
+
+        {/* おすすめ次のレッスン */}
+        {nextLessons.length > 0 && (
+          <div className="mb-10">
+            <h2
+              className="text-2xl font-black mb-4"
+              style={{ fontFamily: "'Zen Maru Gothic', sans-serif", color: "#2C1A0E" }}
+            >
+              ☕ おすすめ次のレッスン
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {nextLessons.map(({ courseId, courseTitle, courseEmoji, lesson, progress: done, total }) => (
+                <Link
+                  key={lesson.id}
+                  to="/courses/$courseId/lessons/$lessonId"
+                  params={{ courseId, lessonId: lesson.id }}
+                  className="block rounded-2xl px-5 py-4 no-underline transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5"
+                  style={{
+                    background: "#fff",
+                    border: "2px solid #2C1A0E",
+                    boxShadow: "3px 3px 0 #2C1A0E",
+                  }}
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl flex-shrink-0">{courseEmoji}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-black mb-0.5" style={{ color: "#C49A6C" }}>
+                        {courseTitle} · {done}/{total}
+                      </div>
+                      <div
+                        className="text-sm font-extrabold leading-tight truncate"
+                        style={{ color: "#2C1A0E" }}
+                      >
+                        {lesson.title}
+                      </div>
+                      <div className="text-xs font-bold mt-1" style={{ color: "#6B3D1E" }}>
+                        ⏱ {lesson.durationMinutes}分 · 続きを学ぶ →
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* クイズ結果 */}
         {progress?.quizResults && progress.quizResults.length > 0 && (

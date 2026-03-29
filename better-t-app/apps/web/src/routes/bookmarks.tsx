@@ -149,12 +149,12 @@ function BookmarksPage() {
                       {TYPE_LABEL[bm.type] ?? bm.type}
                     </div>
                     <div className="text-sm font-extrabold" style={{ color: "#2C1A0E" }}>
-                      {bm.targetId}
+                      {bm.title}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <BookmarkLink type={bm.type} targetId={bm.targetId} />
+                  <BookmarkLink type={bm.type} targetId={bm.targetId} courseId={bm.courseId} />
                   <button
                     type="button"
                     onClick={() => removeMutation.mutate({ bookmarkId: bm.id })}
@@ -179,7 +179,24 @@ function BookmarksPage() {
   );
 }
 
-function BookmarkLink({ type, targetId }: { type: string; targetId: string }) {
+function BookmarkLink({ type, targetId, courseId }: { type: string; targetId: string; courseId?: string | null }) {
+  if (type === "lesson" && courseId) {
+    return (
+      <Link
+        to="/courses/$courseId/lessons/$lessonId"
+        params={{ courseId, lessonId: targetId }}
+        className="px-3 py-1.5 text-xs font-black rounded-xl no-underline transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5"
+        style={{
+          background: "#2C1A0E",
+          border: "2px solid #2C1A0E",
+          boxShadow: "2px 2px 0 #6B3D1E",
+          color: "#F5EFE0",
+        }}
+      >
+        見る →
+      </Link>
+    );
+  }
   if (type === "glossary") {
     return (
       <Link
