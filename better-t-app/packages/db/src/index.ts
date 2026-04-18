@@ -16,3 +16,4 @@ export const db = createDb();
 
 export * from "./schema";
 export { seed } from "./seed";
+export { migrate } from "./migrate";

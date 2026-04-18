@@ -50,7 +50,7 @@ COPY --from=builder /app/apps/web/dist ./web
 COPY --from=builder /app/apps/server/dist ./server
 # マイグレーション SQL ファイル
 # MIGRATIONS_FOLDER=/app/migrations と対応する場所に配置する
-# COPY --from=builder /app/packages/db/src/migrations ./migrations
+COPY --from=builder /app/packages/db/src/migrations ./migrations
 # libsql と native binary (tsdown バンドルに含められないネイティブモジュール)
 # native-deps ステージで非 workspace 環境にインストールした node_modules を丸ごとコピー
 COPY --from=native-deps /deps/node_modules ./node_modules
