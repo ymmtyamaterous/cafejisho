@@ -1,0 +1,458 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Zen+Maru+Gothic:wght@400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#FAF7F2;
+  --cream:#F5EFE0;
+  --steam:#EDE5D4;
+  --espresso:#2C1A0E;
+  --roast:#6B3D1E;
+  --latte:#C49A6C;
+  --latte-light:#E8C99A;
+  --white:#FFFFFF;
+}
+.page{background:var(--bg);font-family:'Nunito',sans-serif;overflow:hidden;}
+.page::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle,rgba(196,154,108,0.2) 2px,transparent 2px);
+  background-size:26px 26px;
+  pointer-events:none;z-index:0;
+}
+
+/* ── FLOATING NAV ── */
+.nav-wrap{
+  position:relative;z-index:100;
+  padding:1rem 1.5rem 0;
+}
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.85rem 1.5rem;
+  background:var(--white);
+  border:2.5px solid var(--espresso);
+  border-radius:24px;
+  box-shadow:5px 5px 0 var(--espresso);
+}
+.logo{
+  font-family:'Zen Maru Gothic',sans-serif;
+  font-size:1.45rem;font-weight:900;color:var(--espresso);
+  display:flex;align-items:center;gap:0.45rem;
+}
+.logo-badge{
+  background:var(--latte);border:2px solid var(--espresso);border-radius:10px;
+  padding:0.1rem 0.5rem;font-size:0.68rem;font-weight:900;color:var(--white);
+  box-shadow:2px 2px 0 var(--espresso);
+}
+.nav-links{display:flex;gap:0.45rem;list-style:none;}
+.nav-links li{
+  background:var(--cream);border:2px solid var(--espresso);border-radius:16px;
+  padding:0.3rem 0.9rem;font-size:0.76rem;font-weight:800;color:var(--espresso);
+  cursor:pointer;box-shadow:2px 2px 0 var(--espresso);
+  transition:transform .1s,box-shadow .1s;
+}
+.nav-links li:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--espresso);}
+.nav-cta{
+  background:var(--espresso);border:2.5px solid var(--espresso);border-radius:16px;
+  padding:0.45rem 1.3rem;font-family:'Nunito',sans-serif;
+  font-size:0.82rem;font-weight:900;color:var(--cream);cursor:pointer;
+  box-shadow:3px 3px 0 var(--roast);transition:transform .1s,box-shadow .1s;
+}
+.nav-cta:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--roast);}
+
+/* ── HERO ── */
+.hero{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:440px;padding:2rem 2rem 2rem;gap:2rem;align-items:center;
+}
+.hero-pill{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  background:var(--latte-light);border:2px solid var(--espresso);border-radius:20px;
+  padding:0.3rem 0.9rem;font-size:0.72rem;font-weight:800;color:var(--espresso);
+  box-shadow:2px 2px 0 var(--espresso);margin-bottom:1.1rem;
+}
+.hero-title{
+  font-family:'Zen Maru Gothic',sans-serif;
+  font-size:3rem;font-weight:900;line-height:1.15;color:var(--espresso);margin-bottom:0.9rem;
+}
+.hl-latte{background:var(--latte);border-radius:6px;padding:0 6px;display:inline;}
+.hl-roast{background:var(--roast);color:var(--cream);border-radius:6px;padding:0 6px;display:inline;}
+.hero-desc{font-size:0.9rem;font-weight:700;color:var(--roast);line-height:1.8;margin-bottom:1.6rem;max-width:320px;}
+.hero-btns{display:flex;gap:0.75rem;flex-wrap:wrap;}
+.btn-primary{
+  background:var(--espresso);border:2.5px solid var(--espresso);border-radius:14px;
+  padding:0.7rem 1.6rem;font-family:'Nunito',sans-serif;
+  font-size:0.88rem;font-weight:900;color:var(--cream);cursor:pointer;
+  box-shadow:4px 4px 0 var(--roast);transition:transform .1s,box-shadow .1s;
+}
+.btn-primary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--roast);}
+.btn-secondary{
+  background:var(--cream);border:2.5px solid var(--espresso);border-radius:14px;
+  padding:0.7rem 1.6rem;font-family:'Nunito',sans-serif;
+  font-size:0.88rem;font-weight:900;color:var(--espresso);cursor:pointer;
+  box-shadow:4px 4px 0 var(--espresso);transition:transform .1s,box-shadow .1s;
+}
+.btn-secondary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--espresso);}
+
+/* ── CAROUSEL ── */
+.carousel-wrap{
+  position:relative;
+  width:100%;
+}
+.carousel{
+  border:2.5px solid var(--espresso);border-radius:24px;
+  overflow:hidden;
+  box-shadow:7px 7px 0 var(--espresso);
+  background:var(--white);
+  position:relative;
+}
+.carousel-track{
+  display:flex;
+  transition:transform .4s cubic-bezier(.4,0,.2,1);
+}
+.slide{
+  min-width:100%;
+  padding:2rem 1.75rem 1.75rem;
+  display:flex;flex-direction:column;gap:0.6rem;
+}
+.slide-tag{
+  display:inline-flex;align-items:center;gap:0.35rem;
+  background:var(--latte-light);border:1.5px solid var(--espresso);border-radius:10px;
+  padding:0.2rem 0.65rem;font-size:0.65rem;font-weight:900;color:var(--espresso);
+  width:fit-content;
+}
+.slide-emoji{font-size:3.2rem;line-height:1;}
+.slide-title{
+  font-family:'Zen Maru Gothic',sans-serif;
+  font-size:1.15rem;font-weight:900;color:var(--espresso);line-height:1.35;
+}
+.slide-desc{font-size:0.78rem;font-weight:700;color:var(--roast);opacity:0.75;line-height:1.65;}
+.slide-footer{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:0.25rem;padding-top:0.75rem;
+  border-top:1.5px solid rgba(107,61,30,0.12);
+}
+.slide-meta{font-size:0.68rem;font-weight:800;color:var(--latte);}
+.slide-btn{
+  background:var(--espresso);border:2px solid var(--espresso);border-radius:10px;
+  padding:0.35rem 0.9rem;font-size:0.72rem;font-weight:900;color:var(--cream);
+  cursor:pointer;box-shadow:2px 2px 0 var(--roast);transition:transform .1s,box-shadow .1s;
+}
+.slide-btn:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--roast);}
+
+/* slide bg tints */
+.slide:nth-child(1){background:#FFFDF8;}
+.slide:nth-child(2){background:#FDF8F0;}
+.slide:nth-child(3){background:#F8F3EA;}
+.slide:nth-child(4){background:#F5EFE0;}
+
+/* arrows */
+.carousel-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:36px;height:36px;
+  background:var(--white);border:2px solid var(--espresso);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;color:var(--espresso);
+  cursor:pointer;z-index:10;
+  box-shadow:2px 2px 0 var(--espresso);
+  transition:background .15s,transform .1s,box-shadow .1s;
+  user-select:none;
+}
+.carousel-arrow:hover{background:var(--latte-light);transform:translateY(-50%) translate(-1px,-1px);box-shadow:3px 3px 0 var(--espresso);}
+.arrow-prev{left:-18px;}
+.arrow-next{right:-18px;}
+
+/* dots */
+.carousel-dots{
+  display:flex;justify-content:center;gap:6px;margin-top:0.85rem;
+}
+.dot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(107,61,30,0.2);border:1.5px solid var(--espresso);
+  cursor:pointer;transition:background .2s,transform .2s;
+}
+.dot.active{background:var(--espresso);transform:scale(1.2);}
+
+/* ── STATS ── */
+.stats{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;
+  padding:0 2rem 2.5rem;
+}
+.stat-card{
+  border:2.5px solid var(--espresso);border-radius:18px;
+  padding:1.2rem 1rem;text-align:center;
+  box-shadow:4px 4px 0 var(--espresso);
+  transition:transform .15s,box-shadow .15s;cursor:default;
+}
+.stat-card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--espresso);}
+.stat-card:nth-child(1){background:var(--latte-light);}
+.stat-card:nth-child(2){background:var(--cream);}
+.stat-card:nth-child(3){background:var(--latte);}
+.stat-card:nth-child(4){background:var(--espresso);}
+.stat-num{font-family:'Zen Maru Gothic',sans-serif;font-size:2.2rem;font-weight:900;color:var(--espresso);line-height:1;}
+.stat-card:nth-child(4) .stat-num{color:var(--latte-light);}
+.stat-label{font-size:0.72rem;font-weight:800;color:var(--espresso);margin-top:0.3rem;opacity:0.7;}
+.stat-card:nth-child(4) .stat-label{color:var(--cream);opacity:0.75;}
+
+/* ── WAVY ── */
+.wavy{position:relative;z-index:1;line-height:0;}
+.wavy svg{display:block;width:100%;}
+
+/* ── COURSES ── */
+.courses{background:var(--espresso);position:relative;z-index:1;padding:3rem 2rem;}
+.section-head{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;}
+.section-badge{background:var(--latte);border:2px solid var(--latte);border-radius:10px;padding:0.2rem 0.7rem;font-size:0.7rem;font-weight:900;color:var(--espresso);}
+.section-title{font-family:'Zen Maru Gothic',sans-serif;font-size:1.8rem;font-weight:900;color:var(--white);}
+.courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;}
+.course-card{border:2.5px solid rgba(255,255,255,0.2);border-radius:20px;overflow:hidden;cursor:pointer;box-shadow:5px 5px 0 rgba(0,0,0,0.25);transition:transform .15s,box-shadow .15s;}
+.course-card:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 rgba(0,0,0,0.35);}
+.c1{background:#3D2412;}.c2{background:#2A1A08;}.c3{background:#4A2818;}
+.course-header{padding:1.4rem 1.2rem 0.9rem;border-bottom:1.5px solid rgba(196,154,108,0.15);}
+.course-emoji{font-size:2.3rem;margin-bottom:0.4rem;display:block;}
+.course-level{display:inline-block;border:1.5px solid var(--latte);border-radius:8px;padding:0.1rem 0.6rem;font-size:0.63rem;font-weight:900;color:var(--latte);margin-bottom:0.45rem;}
+.course-title{font-family:'Zen Maru Gothic',sans-serif;font-size:1rem;font-weight:900;color:var(--cream);line-height:1.35;}
+.course-body{padding:0.9rem 1.2rem 1.2rem;}
+.course-desc{font-size:0.76rem;font-weight:700;color:var(--latte-light);opacity:0.7;line-height:1.65;margin-bottom:0.85rem;}
+.course-footer{display:flex;justify-content:space-between;align-items:center;}
+.course-meta{font-size:0.68rem;font-weight:800;color:var(--latte);opacity:0.7;}
+.course-arrow{width:30px;height:30px;border:2px solid var(--latte);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.95rem;color:var(--latte);transition:background .15s,color .15s;}
+.course-card:hover .course-arrow{background:var(--latte);color:var(--espresso);}
+
+/* ── FOOTER ── */
+.footer{background:var(--espresso);border-top:3px solid var(--latte);padding:2.5rem 2rem 1.5rem;position:relative;z-index:1;}
+.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;margin-bottom:2rem;}
+.footer-logo{font-family:'Zen Maru Gothic',sans-serif;font-size:1.4rem;font-weight:900;color:var(--cream);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;}
+.footer-logo span{color:var(--latte);}
+.footer-tagline{font-size:0.78rem;font-weight:700;color:rgba(245,239,224,0.4);line-height:1.7;max-width:200px;margin-bottom:1rem;}
+.footer-socials{display:flex;gap:0.5rem;}
+.social-btn{width:32px;height:32px;border:2px solid rgba(196,154,108,0.25);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.82rem;color:rgba(245,239,224,0.45);cursor:pointer;transition:border-color .15s,color .15s;}
+.social-btn:hover{border-color:var(--latte);color:var(--latte);}
+.footer-col-title{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--latte);font-weight:900;margin-bottom:0.7rem;}
+.footer-links{list-style:none;}
+.footer-links li{font-size:0.78rem;font-weight:700;color:rgba(245,239,224,0.4);margin-bottom:0.45rem;cursor:pointer;transition:color .15s;}
+.footer-links li:hover{color:var(--cream);}
+.footer-bottom{border-top:1px solid rgba(196,154,108,0.12);padding-top:1rem;display:flex;justify-content:space-between;font-size:0.68rem;font-weight:700;color:rgba(245,239,224,0.22);}
+</style>
+
+<div class="page">
+
+<!-- FLOATING NAV -->
+<div class="nav-wrap">
+  <nav>
+    <div class="logo">☕ cafejisho <span class="logo-badge">β</span></div>
+    <ul class="nav-links">
+      <li>🌱 コース</li>
+      <li>📖 辞典</li>
+      <li>🗺️ 産地</li>
+      <li>🎯 クイズ</li>
+    </ul>
+    <button class="nav-cta" onclick="sendPrompt('cafejishoで学習をはじめたい')">はじめる ✨</button>
+  </nav>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-pill">☕ コーヒーを楽しく学ぼう！</div>
+    <h1 class="hero-title">
+      コーヒーって<br>
+      <span class="hl-latte">こんなに</span><br>
+      <span class="hl-roast">おもしろい！</span>
+    </h1>
+    <p class="hero-desc">豆・産地・焙煎・抽出法まで——<br>ゲーム感覚でコーヒーの知識をGETしよう！</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="sendPrompt('cafejishoのコース一覧を教えて')">無料で学ぶ 🚀</button>
+      <button class="btn-secondary" onclick="sendPrompt('cafejishoのクイズをやってみたい')">クイズに挑戦 🎯</button>
+    </div>
+  </div>
+
+  <!-- CAROUSEL -->
+  <div class="carousel-wrap">
+    <div class="carousel">
+      <div class="carousel-track" id="track">
+
+        <div class="slide">
+          <span class="slide-tag">🌱 今日のレッスン</span>
+          <span class="slide-emoji">☕</span>
+          <div class="slide-title">エスプレッソの<br>抽出圧力とは？</div>
+          <div class="slide-desc">9気圧・25秒——たったこれだけで極上の一杯が生まれる。圧力が生む"クレマ"の秘密を学ぼう。</div>
+          <div class="slide-footer">
+            <span class="slide-meta">入門コース · レッスン3</span>
+            <button class="slide-btn" onclick="sendPrompt('エスプレッソの抽出圧力について教えて')">学ぶ →</button>
+          </div>
+        </div>
+
+        <div class="slide">
+          <span class="slide-tag">🌍 産地ピックアップ</span>
+          <span class="slide-emoji">🫘</span>
+          <div class="slide-title">エチオピア・<br>イルガチェフェ</div>
+          <div class="slide-desc">ブルーベリーとジャスミンのような香り。コーヒー発祥の地が生む、世界屈指のフローラル豆。</div>
+          <div class="slide-footer">
+            <span class="slide-meta">産地辞典 · エチオピア</span>
+            <button class="slide-btn" onclick="sendPrompt('エチオピアイルガチェフェについて教えて')">学ぶ →</button>
+          </div>
+        </div>
+
+        <div class="slide">
+          <span class="slide-tag">🔬 焙煎の科学</span>
+          <span class="slide-emoji">🔥</span>
+          <div class="slide-title">浅煎り vs 深煎り<br>どっちがいい？</div>
+          <div class="slide-desc">温度と時間が決める味のすべて。メイラード反応からカラメル化まで、焙煎の化学を解説。</div>
+          <div class="slide-footer">
+            <span class="slide-meta">中級コース · レッスン2</span>
+            <button class="slide-btn" onclick="sendPrompt('浅煎りと深煎りの違いを教えて')">学ぶ →</button>
+          </div>
+        </div>
+
+        <div class="slide">
+          <span class="slide-tag">🎯 今日のクイズ</span>
+          <span class="slide-emoji">🏆</span>
+          <div class="slide-title">カッピングスコア<br>80点以上って何？</div>
+          <div class="slide-desc">SCAが定めるスペシャルティコーヒーの基準。10項目の評価で決まる"品質の証明"とは。</div>
+          <div class="slide-footer">
+            <span class="slide-meta">上級コース · レッスン1</span>
+            <button class="slide-btn" onclick="sendPrompt('スペシャルティコーヒーのカッピングスコアについて教えて')">学ぶ →</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <button class="carousel-arrow arrow-prev" id="prev">‹</button>
+    <button class="carousel-arrow arrow-next" id="next">›</button>
+    <div class="carousel-dots" id="dots"></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-card"><div class="stat-num">120+</div><div class="stat-label">☕ コーヒー用語</div></div>
+  <div class="stat-card"><div class="stat-num">30</div><div class="stat-label">🌍 産地・農園</div></div>
+  <div class="stat-card"><div class="stat-num">12</div><div class="stat-label">🔬 抽出法ガイド</div></div>
+  <div class="stat-card"><div class="stat-num">無料</div><div class="stat-label">🎉 基礎コース全部</div></div>
+</div>
+
+<!-- WAVY -->
+<div class="wavy">
+  <svg viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 0 Q150 60 300 30 Q450 0 600 30 Q750 60 900 30 Q1050 0 1200 30 L1200 60 L0 60Z" fill="#2C1A0E"/>
+  </svg>
+</div>
+
+<!-- COURSES -->
+<div class="courses">
+  <div class="section-head">
+    <span class="section-badge">📚 学習コース</span>
+    <span class="section-title">どこから始める？</span>
+  </div>
+  <div class="courses-grid">
+    <div class="course-card c1" onclick="sendPrompt('コーヒー入門コースの詳細を教えて')">
+      <div class="course-header">
+        <span class="course-emoji">🌱</span>
+        <div class="course-level">入門 · BEGINNER</div>
+        <div class="course-title">はじめてのコーヒー学</div>
+      </div>
+      <div class="course-body">
+        <div class="course-desc">豆・焙煎・抽出の基本をやさしく学ぶ。コーヒーの「なぜ？」が全部わかる！</div>
+        <div class="course-footer">
+          <span class="course-meta">8レッスン · 2時間 · 無料</span>
+          <div class="course-arrow">›</div>
+        </div>
+      </div>
+    </div>
+    <div class="course-card c2" onclick="sendPrompt('コーヒー中級コースの詳細を教えて')">
+      <div class="course-header">
+        <span class="course-emoji">🫘</span>
+        <div class="course-level">中級 · INTERMEDIATE</div>
+        <div class="course-title">産地と焙煎の科学</div>
+      </div>
+      <div class="course-body">
+        <div class="course-desc">エチオピア、コロンビア、ブラジル…テロワールと味の秘密を探ろう！</div>
+        <div class="course-footer">
+          <span class="course-meta">14レッスン · 5時間</span>
+          <div class="course-arrow">›</div>
+        </div>
+      </div>
+    </div>
+    <div class="course-card c3" onclick="sendPrompt('コーヒー上級コースの詳細を教えて')">
+      <div class="course-header">
+        <span class="course-emoji">🏆</span>
+        <div class="course-level">上級 · ADVANCED</div>
+        <div class="course-title">カッピングとスペシャルティ</div>
+      </div>
+      <div class="course-body">
+        <div class="course-desc">SCAプロトコルのカッピングスキルでプロ級の味覚を身につけよう！</div>
+        <div class="course-footer">
+          <span class="course-meta">20レッスン · 8時間</span>
+          <div class="course-arrow">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WAVY 2 -->
+<div class="wavy">
+  <svg viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 30 Q150 0 300 30 Q450 60 600 30 Q750 0 900 30 Q1050 60 1200 30 L1200 60 L0 60Z" fill="#FAF7F2"/>
+  </svg>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">☕ cafe<span>jisho</span></div>
+      <div class="footer-tagline">コーヒーを、もっと楽しく。知識でコーヒーはもっとおいしくなる！</div>
+      <div class="footer-socials">
+        <div class="social-btn">𝕏</div>
+        <div class="social-btn">ig</div>
+        <div class="social-btn">yt</div>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">学ぶ</div>
+      <ul class="footer-links"><li>入門コース</li><li>産地辞典</li><li>焙煎ガイド</li><li>抽出法一覧</li></ul>
+    </div>
+    <div>
+      <div class="footer-col-title">辞典</div>
+      <ul class="footer-links"><li>用語集</li><li>農園マップ</li><li>品種図鑑</li><li>フレーバー表</li></ul>
+    </div>
+    <div>
+      <div class="footer-col-title">その他</div>
+      <ul class="footer-links"><li>コミュニティ</li><li>マガジン</li><li>お問い合わせ</li><li>プレミアム ⭐</li></ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 cafejisho — コーヒーの知識を、すべての人へ ☕</span>
+    <span>プライバシー · 利用規約</span>
+  </div>
+</div>
+
+</div>
+
+<script>
+const track = document.getElementById('track');
+const slides = track.children;
+const total = slides.length;
+const dotsWrap = document.getElementById('dots');
+let cur = 0;
+
+for(let i=0;i<total;i++){
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===0?' active':'');
+  d.onclick = () => go(i);
+  dotsWrap.appendChild(d);
+}
+
+function go(n){
+  cur = (n + total) % total;
+  track.style.transform = `translateX(-${cur*100}%)`;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+}
+
+document.getElementById('prev').onclick = () => go(cur-1);
+document.getElementById('next').onclick = () => go(cur+1);
+
+setInterval(() => go(cur+1), 4000);
+</script>

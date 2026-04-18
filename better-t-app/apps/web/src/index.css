@@ -1,1 +1,17 @@
 @import "@better-t-app/ui/globals.css";
+
+@theme inline {
+  --color-espresso: #2c1a0e;
+  --color-roast: #6b3d1e;
+  --color-latte: #c49a6c;
+  --color-latte-light: #e8c99a;
+  --color-cream: #f5efe0;
+  --color-steam: #ede5d4;
+  --color-coffee-bg: #faf7f2;
+  --font-zen: "Zen Maru Gothic", sans-serif;
+}
+
+body {
+  font-family: "Nunito", sans-serif;
+  background-color: #faf7f2;
+}

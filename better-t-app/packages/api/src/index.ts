@@ -18,3 +18,52 @@ const requireAuth = o.middleware(async ({ context, next }) => {
 });
 
 export const protectedProcedure = publicProcedure.use(requireAuth);
+
+// プレミアム会員確認ミドルウェア
+import { db, userPremium } from "@better-t-app/db";
+import { eq } from "drizzle-orm";
+
+const requirePremium = o.middleware(async ({ context, next }) => {
+  if (!context.session?.user) {
+    throw new ORPCError("UNAUTHORIZED");
+  }
+  const userId = context.session.user.id;
+  const [premium] = await db
+    .select({ expiresAt: userPremium.expiresAt })
+    .from(userPremium)
+    .where(eq(userPremium.userId, userId))
+    .limit(1);
+
+  const now = new Date();
+  const isPremium = !!premium && (premium.expiresAt === null || premium.expiresAt > now);
+
+  if (!isPremium) {
+    throw new ORPCError("FORBIDDEN", { message: "プレミアム会員限定のコンテンツです" });
+  }
+
+  return next({
+    context: {
+      session: context.session,
+    },
+  });
+});
+
+export const premiumProcedure = publicProcedure.use(requirePremium);
+
+// 管理者確認ミドルウェア
+const requireAdmin = o.middleware(async ({ context, next }) => {
+  if (!context.session?.user) {
+    throw new ORPCError("UNAUTHORIZED");
+  }
+  const user = context.session.user as { role?: string };
+  if (user.role !== "admin") {
+    throw new ORPCError("FORBIDDEN", { message: "管理者のみアクセス可能です" });
+  }
+  return next({
+    context: {
+      session: context.session,
+    },
+  });
+});
+
+export const adminProcedure = publicProcedure.use(requireAdmin);
