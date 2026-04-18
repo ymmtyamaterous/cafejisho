@@ -1,6 +1,7 @@
 import { createContext } from "@better-t-app/api/context";
 import { appRouter } from "@better-t-app/api/routers/index";
 import { auth } from "@better-t-app/auth";
+import { db, seed } from "@better-t-app/db";
 import { env } from "@better-t-app/env/server";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
@@ -73,6 +74,11 @@ app.use("/*", async (c, next) => {
 
 app.get("/", (c) => {
   return c.text("OK");
+});
+
+// サーバー起動時にシードデータを自動投入（テーブル未生成の場合はスキップ）
+seed(db).catch((err) => {
+  console.error("シード自動投入中にエラーが発生しました:", err);
 });
 
 export default app;
