@@ -134,22 +134,6 @@ function CoursesPage() {
                       <span className="text-xs font-extrabold opacity-70 block" style={{ color: "#C49A6C" }}>
                         {c.lessonCount}レッスン · {c.durationMinutes}分
                       </span>
-                      {!c.isPremium && (
-                        <span
-                          className="inline-block text-xs font-black px-2 py-0.5 rounded-lg mt-1"
-                          style={{ background: "#C49A6C", color: "#2C1A0E" }}
-                        >
-                          無料
-                        </span>
-                      )}
-                      {c.isPremium && (
-                        <span
-                          className="inline-block text-xs font-black px-2 py-0.5 rounded-lg mt-1"
-                          style={{ background: "#6B3D1E", color: "#E8C99A", border: "1.5px solid #C49A6C" }}
-                        >
-                          ⭐ プレミアム
-                        </span>
-                      )}
                     </div>
                     <div
                       className="w-9 h-9 rounded-full flex items-center justify-center text-lg transition-all duration-150"

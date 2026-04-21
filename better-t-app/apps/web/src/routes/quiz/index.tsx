@@ -101,12 +101,12 @@ function QuizIndexPage() {
                 <span
                   className="text-xs font-black px-3 py-1 rounded-xl"
                   style={{
-                    background: course.isPremium ? "#C49A6C" : "#E8C99A",
+                    background: "#E8C99A",
                     color: "#2C1A0E",
                     border: "1.5px solid #2C1A0E",
                   }}
                 >
-                  {course.isPremium ? "⭐ プレミアム" : "🎉 無料"}
+                  🎉 無料
                 </span>
               </Link>
             ))}

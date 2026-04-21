@@ -1,4 +1,4 @@
-import { course, db, lesson, lessonCompletion, quiz, userPremium } from "@better-t-app/db";
+import { db, lesson, lessonCompletion, quiz } from "@better-t-app/db";
 import { ORPCError } from "@orpc/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
@@ -26,30 +26,6 @@ export const lessonsRouter = {
 
       if (!row) {
         throw new ORPCError("NOT_FOUND", { message: "レッスンが見つかりません" });
-      }
-
-      // コースのプレミアムフラグ確認
-      const [courseRow] = await db
-        .select({ isPremium: course.isPremium })
-        .from(course)
-        .where(eq(course.id, row.courseId))
-        .limit(1);
-
-      if (courseRow?.isPremium) {
-        const userId = context.session?.user?.id;
-        if (!userId) {
-          throw new ORPCError("UNAUTHORIZED", { message: "このレッスンを閲覧するにはログインが必要です" });
-        }
-        const [premium] = await db
-          .select({ expiresAt: userPremium.expiresAt })
-          .from(userPremium)
-          .where(eq(userPremium.userId, userId))
-          .limit(1);
-        const now = new Date();
-        const isPremiumUser = !!premium && (premium.expiresAt === null || premium.expiresAt > now);
-        if (!isPremiumUser) {
-          throw new ORPCError("FORBIDDEN", { message: "このレッスンはプレミアム会員限定です" });
-        }
       }
 
       // クイズの存在確認
@@ -129,5 +105,22 @@ export const lessonsRouter = {
 
       const completedSet = new Set(completions.map((c) => c.lessonId));
       return lessonIds.filter((id) => completedSet.has(id));
+    }),
+
+  uncomplete: protectedProcedure
+    .input(z.object({ lessonId: z.string() }))
+    .handler(async ({ input, context }) => {
+      const userId = context.session.user.id;
+
+      await db
+        .delete(lessonCompletion)
+        .where(
+          and(
+            eq(lessonCompletion.userId, userId),
+            eq(lessonCompletion.lessonId, input.lessonId),
+          ),
+        );
+
+      return { success: true };
     }),
 };

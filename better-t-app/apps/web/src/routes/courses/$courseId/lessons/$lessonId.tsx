@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
@@ -36,16 +37,49 @@ function LessonDetailPage() {
 
   const completeMutation = useMutation({
     ...orpc.lessons.complete.mutationOptions(),
+    onMutate: () => {
+      const queryKey = orpc.lessons.getCompletedIds.queryOptions({ input: { courseId } }).queryKey;
+      const prev = queryClient.getQueryData<string[]>(queryKey);
+      queryClient.setQueryData<string[]>(queryKey, (old = []) =>
+        old.includes(lessonId) ? old : [...old, lessonId],
+      );
+      return { prev };
+    },
     onSuccess: () => {
       toast.success("レッスン完了！🎉");
-      queryClient.invalidateQueries({ queryKey: ["lessons", "getCompletedIds", { courseId }] });
+      queryClient.invalidateQueries({ queryKey: orpc.lessons.getCompletedIds.queryOptions({ input: { courseId } }).queryKey });
 
       // クイズがある場合はクイズへ遷移（lessonId をクイズルートのパラメータとして使用）
       if (lesson?.hasQuiz) {
         navigate({ to: "/quiz/$quizId", params: { quizId: lessonId } });
       }
     },
-    onError: (err) => {
+    onError: (err, _vars, ctx) => {
+      if (ctx?.prev !== undefined) {
+        queryClient.setQueryData(orpc.lessons.getCompletedIds.queryOptions({ input: { courseId } }).queryKey, ctx.prev);
+      }
+      toast.error(`エラー: ${err.message}`);
+    },
+  });
+
+  const uncompleteMutation = useMutation({
+    ...orpc.lessons.uncomplete.mutationOptions(),
+    onMutate: () => {
+      const queryKey = orpc.lessons.getCompletedIds.queryOptions({ input: { courseId } }).queryKey;
+      const prev = queryClient.getQueryData<string[]>(queryKey);
+      queryClient.setQueryData<string[]>(queryKey, (old = []) =>
+        old.filter((id) => id !== lessonId),
+      );
+      return { prev };
+    },
+    onSuccess: () => {
+      toast.success("レッスンを未完了に戻しました");
+      queryClient.invalidateQueries({ queryKey: orpc.lessons.getCompletedIds.queryOptions({ input: { courseId } }).queryKey });
+    },
+    onError: (err, _vars, ctx) => {
+      if (ctx?.prev !== undefined) {
+        queryClient.setQueryData(orpc.lessons.getCompletedIds.queryOptions({ input: { courseId } }).queryKey, ctx.prev);
+      }
       toast.error(`エラー: ${err.message}`);
     },
   });
@@ -250,6 +284,7 @@ function LessonDetailPage() {
         >
           <div className="prose prose-sm max-w-none" style={{ color: "#2C1A0E" }}>
             <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
               components={{
                 h1: ({ children }) => (
                   <h1
@@ -309,6 +344,41 @@ function LessonDetailPage() {
                     {children}
                   </code>
                 ),
+                table: ({ children }) => (
+                  <div className="overflow-x-auto my-4">
+                    <table
+                      className="w-full text-sm border-collapse"
+                      style={{ border: "2px solid #2C1A0E", borderRadius: "8px", overflow: "hidden" }}
+                    >
+                      {children}
+                    </table>
+                  </div>
+                ),
+                thead: ({ children }) => (
+                  <thead style={{ background: "#2C1A0E" }}>{children}</thead>
+                ),
+                tbody: ({ children }) => (
+                  <tbody>{children}</tbody>
+                ),
+                tr: ({ children }) => (
+                  <tr style={{ borderBottom: "1px solid #E8C99A" }}>{children}</tr>
+                ),
+                th: ({ children }) => (
+                  <th
+                    className="px-4 py-2 text-left text-xs font-black"
+                    style={{ color: "#F5EFE0" }}
+                  >
+                    {children}
+                  </th>
+                ),
+                td: ({ children }) => (
+                  <td
+                    className="px-4 py-2 text-xs font-bold"
+                    style={{ color: "#2C1A0E", background: "#FAF7F2", borderRight: "1px solid #E8C99A" }}
+                  >
+                    {children}
+                  </td>
+                ),
               }}
             >
               {lesson.content}
@@ -333,6 +403,38 @@ function LessonDetailPage() {
             >
               {completeMutation.isPending ? "完了中..." : "✓ このレッスンを完了する"}
             </button>
+          )}
+          {session && isDone && (
+            <>
+              <button
+                type="button"
+                disabled
+                className="flex-1 py-3 text-sm font-black rounded-2xl cursor-not-allowed"
+                style={{
+                  background: "#C49A6C",
+                  border: "2.5px solid #2C1A0E",
+                  boxShadow: "4px 4px 0 #2C1A0E",
+                  color: "#2C1A0E",
+                  opacity: 1,
+                }}
+              >
+                ✓ 完了済み
+              </button>
+              <button
+                type="button"
+                onClick={() => uncompleteMutation.mutate({ lessonId })}
+                disabled={uncompleteMutation.isPending}
+                className="px-5 py-3 text-sm font-black rounded-2xl cursor-pointer transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  background: "#F5EFE0",
+                  border: "2px solid #2C1A0E",
+                  boxShadow: "3px 3px 0 #2C1A0E",
+                  color: "#2C1A0E",
+                }}
+              >
+                {uncompleteMutation.isPending ? "処理中..." : "↩ 未完了に戻す"}
+              </button>
+            </>
           )}
           {session && isDone && lesson.hasQuiz && (
             <Link
