@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
@@ -261,6 +262,7 @@ function LessonDetailPage() {
         >
           <div className="prose prose-sm max-w-none" style={{ color: "#2C1A0E" }}>
             <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
               components={{
                 h1: ({ children }) => (
                   <h1
