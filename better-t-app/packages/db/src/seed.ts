@@ -45,7 +45,7 @@ export async function seed(dbInstance?: LibSQLDatabase<typeof schema>) {
       level: "intermediate" as const,
       durationMinutes: 300,
       thumbnailEmoji: "🫘",
-      isPremium: true,
+      isPremium: false,
       orderIndex: 2,
     },
     {
@@ -56,7 +56,7 @@ export async function seed(dbInstance?: LibSQLDatabase<typeof schema>) {
       level: "advanced" as const,
       durationMinutes: 480,
       thumbnailEmoji: "🏆",
-      isPremium: true,
+      isPremium: false,
       orderIndex: 3,
     },
   ];
@@ -65,7 +65,10 @@ export async function seed(dbInstance?: LibSQLDatabase<typeof schema>) {
     await db
       .insert(schema.course)
       .values(c)
-      .onConflictDoNothing();
+      .onConflictDoUpdate({
+        target: schema.course.id,
+        set: { isPremium: c.isPremium },
+      });
   }
   console.log("✅ コース投入完了");
 

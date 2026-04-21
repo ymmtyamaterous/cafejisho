@@ -380,7 +380,6 @@ function HomeComponent() {
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-extrabold opacity-70" style={{ color: "#C49A6C" }}>
                           {c.lessonCount}レッスン · {c.durationMinutes}分
-                          {!c.isPremium && " · 無料"}
                         </span>
                         <div
                           className="w-8 h-8 rounded-full flex items-center justify-center text-base transition-all duration-150"
