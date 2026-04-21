@@ -37,27 +37,49 @@ function LessonDetailPage() {
 
   const completeMutation = useMutation({
     ...orpc.lessons.complete.mutationOptions(),
+    onMutate: () => {
+      const queryKey = orpc.lessons.getCompletedIds.queryOptions({ input: { courseId } }).queryKey;
+      const prev = queryClient.getQueryData<string[]>(queryKey);
+      queryClient.setQueryData<string[]>(queryKey, (old = []) =>
+        old.includes(lessonId) ? old : [...old, lessonId],
+      );
+      return { prev };
+    },
     onSuccess: () => {
       toast.success("レッスン完了！🎉");
-      queryClient.invalidateQueries({ queryKey: ["lessons", "getCompletedIds", { courseId }] });
+      queryClient.invalidateQueries({ queryKey: orpc.lessons.getCompletedIds.queryOptions({ input: { courseId } }).queryKey });
 
       // クイズがある場合はクイズへ遷移（lessonId をクイズルートのパラメータとして使用）
       if (lesson?.hasQuiz) {
         navigate({ to: "/quiz/$quizId", params: { quizId: lessonId } });
       }
     },
-    onError: (err) => {
+    onError: (err, _vars, ctx) => {
+      if (ctx?.prev !== undefined) {
+        queryClient.setQueryData(orpc.lessons.getCompletedIds.queryOptions({ input: { courseId } }).queryKey, ctx.prev);
+      }
       toast.error(`エラー: ${err.message}`);
     },
   });
 
   const uncompleteMutation = useMutation({
     ...orpc.lessons.uncomplete.mutationOptions(),
+    onMutate: () => {
+      const queryKey = orpc.lessons.getCompletedIds.queryOptions({ input: { courseId } }).queryKey;
+      const prev = queryClient.getQueryData<string[]>(queryKey);
+      queryClient.setQueryData<string[]>(queryKey, (old = []) =>
+        old.filter((id) => id !== lessonId),
+      );
+      return { prev };
+    },
     onSuccess: () => {
       toast.success("レッスンを未完了に戻しました");
-      queryClient.invalidateQueries({ queryKey: ["lessons", "getCompletedIds", { courseId }] });
+      queryClient.invalidateQueries({ queryKey: orpc.lessons.getCompletedIds.queryOptions({ input: { courseId } }).queryKey });
     },
-    onError: (err) => {
+    onError: (err, _vars, ctx) => {
+      if (ctx?.prev !== undefined) {
+        queryClient.setQueryData(orpc.lessons.getCompletedIds.queryOptions({ input: { courseId } }).queryKey, ctx.prev);
+      }
       toast.error(`エラー: ${err.message}`);
     },
   });
