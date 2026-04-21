@@ -50,6 +50,17 @@ function LessonDetailPage() {
     },
   });
 
+  const uncompleteMutation = useMutation({
+    ...orpc.lessons.uncomplete.mutationOptions(),
+    onSuccess: () => {
+      toast.success("レッスンを未完了に戻しました");
+      queryClient.invalidateQueries({ queryKey: ["lessons", "getCompletedIds", { courseId }] });
+    },
+    onError: (err) => {
+      toast.error(`エラー: ${err.message}`);
+    },
+  });
+
   const addBookmarkMutation = useMutation({
     ...orpc.bookmarks.add.mutationOptions(),
     onSuccess: () => {
@@ -309,6 +320,41 @@ function LessonDetailPage() {
                     {children}
                   </code>
                 ),
+                table: ({ children }) => (
+                  <div className="overflow-x-auto my-4">
+                    <table
+                      className="w-full text-sm border-collapse"
+                      style={{ border: "2px solid #2C1A0E", borderRadius: "8px", overflow: "hidden" }}
+                    >
+                      {children}
+                    </table>
+                  </div>
+                ),
+                thead: ({ children }) => (
+                  <thead style={{ background: "#2C1A0E" }}>{children}</thead>
+                ),
+                tbody: ({ children }) => (
+                  <tbody>{children}</tbody>
+                ),
+                tr: ({ children }) => (
+                  <tr style={{ borderBottom: "1px solid #E8C99A" }}>{children}</tr>
+                ),
+                th: ({ children }) => (
+                  <th
+                    className="px-4 py-2 text-left text-xs font-black"
+                    style={{ color: "#F5EFE0" }}
+                  >
+                    {children}
+                  </th>
+                ),
+                td: ({ children }) => (
+                  <td
+                    className="px-4 py-2 text-xs font-bold"
+                    style={{ color: "#2C1A0E", background: "#FAF7F2", borderRight: "1px solid #E8C99A" }}
+                  >
+                    {children}
+                  </td>
+                ),
               }}
             >
               {lesson.content}
@@ -333,6 +379,38 @@ function LessonDetailPage() {
             >
               {completeMutation.isPending ? "完了中..." : "✓ このレッスンを完了する"}
             </button>
+          )}
+          {session && isDone && (
+            <>
+              <button
+                type="button"
+                disabled
+                className="flex-1 py-3 text-sm font-black rounded-2xl cursor-not-allowed"
+                style={{
+                  background: "#C49A6C",
+                  border: "2.5px solid #2C1A0E",
+                  boxShadow: "4px 4px 0 #2C1A0E",
+                  color: "#2C1A0E",
+                  opacity: 1,
+                }}
+              >
+                ✓ 完了済み
+              </button>
+              <button
+                type="button"
+                onClick={() => uncompleteMutation.mutate({ lessonId })}
+                disabled={uncompleteMutation.isPending}
+                className="px-5 py-3 text-sm font-black rounded-2xl cursor-pointer transition-all duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  background: "#F5EFE0",
+                  border: "2px solid #2C1A0E",
+                  boxShadow: "3px 3px 0 #2C1A0E",
+                  color: "#2C1A0E",
+                }}
+              >
+                {uncompleteMutation.isPending ? "処理中..." : "↩ 未完了に戻す"}
+              </button>
+            </>
           )}
           {session && isDone && lesson.hasQuiz && (
             <Link

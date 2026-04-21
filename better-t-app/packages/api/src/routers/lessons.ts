@@ -130,4 +130,21 @@ export const lessonsRouter = {
       const completedSet = new Set(completions.map((c) => c.lessonId));
       return lessonIds.filter((id) => completedSet.has(id));
     }),
+
+  uncomplete: protectedProcedure
+    .input(z.object({ lessonId: z.string() }))
+    .handler(async ({ input, context }) => {
+      const userId = context.session.user.id;
+
+      await db
+        .delete(lessonCompletion)
+        .where(
+          and(
+            eq(lessonCompletion.userId, userId),
+            eq(lessonCompletion.lessonId, input.lessonId),
+          ),
+        );
+
+      return { success: true };
+    }),
 };

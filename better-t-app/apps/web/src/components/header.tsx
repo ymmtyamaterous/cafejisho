@@ -30,16 +30,6 @@ export default function Header() {
           style={{ fontFamily: "'Zen Maru Gothic', sans-serif" }}
         >
           <span className="text-2xl font-black text-espresso">☕ cafejisho</span>
-          <span
-            className="text-xs font-black text-white px-2 py-0.5 rounded-lg"
-            style={{
-              background: "#C49A6C",
-              border: "2px solid #2C1A0E",
-              boxShadow: "2px 2px 0 #2C1A0E",
-            }}
-          >
-            β
-          </span>
         </Link>
 
         {/* ナビリンク */}

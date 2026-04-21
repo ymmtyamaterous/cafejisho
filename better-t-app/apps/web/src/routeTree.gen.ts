@@ -9,8 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -26,6 +28,11 @@ import { Route as GlossaryTermIdRouteImport } from './routes/glossary/$termId'
 import { Route as CoursesCourseIdIndexRouteImport } from './routes/courses/$courseId/index'
 import { Route as CoursesCourseIdLessonsLessonIdRouteImport } from './routes/courses/$courseId/lessons/$lessonId'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -34,6 +41,11 @@ const SignupRoute = SignupRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PremiumRoute = PremiumRouteImport.update({
@@ -114,8 +126,10 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/premium': typeof PremiumRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/glossary/$termId': typeof GlossaryTermIdRoute
   '/origins/$originId': typeof OriginsOriginIdRoute
   '/quiz/$quizId': typeof QuizQuizIdRoute
@@ -132,8 +146,10 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/premium': typeof PremiumRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/glossary/$termId': typeof GlossaryTermIdRoute
   '/origins/$originId': typeof OriginsOriginIdRoute
   '/quiz/$quizId': typeof QuizQuizIdRoute
@@ -151,8 +167,10 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/premium': typeof PremiumRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/glossary/$termId': typeof GlossaryTermIdRoute
   '/origins/$originId': typeof OriginsOriginIdRoute
   '/quiz/$quizId': typeof QuizQuizIdRoute
@@ -171,8 +189,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/premium'
+    | '/privacy'
     | '/profile'
     | '/signup'
+    | '/terms'
     | '/glossary/$termId'
     | '/origins/$originId'
     | '/quiz/$quizId'
@@ -189,8 +209,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/premium'
+    | '/privacy'
     | '/profile'
     | '/signup'
+    | '/terms'
     | '/glossary/$termId'
     | '/origins/$originId'
     | '/quiz/$quizId'
@@ -207,8 +229,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/premium'
+    | '/privacy'
     | '/profile'
     | '/signup'
+    | '/terms'
     | '/glossary/$termId'
     | '/origins/$originId'
     | '/quiz/$quizId'
@@ -226,8 +250,10 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   PremiumRoute: typeof PremiumRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   SignupRoute: typeof SignupRoute
+  TermsRoute: typeof TermsRoute
   GlossaryTermIdRoute: typeof GlossaryTermIdRoute
   OriginsOriginIdRoute: typeof OriginsOriginIdRoute
   QuizQuizIdRoute: typeof QuizQuizIdRoute
@@ -241,6 +267,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -253,6 +286,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/premium': {
@@ -362,8 +402,10 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   PremiumRoute: PremiumRoute,
+  PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   SignupRoute: SignupRoute,
+  TermsRoute: TermsRoute,
   GlossaryTermIdRoute: GlossaryTermIdRoute,
   OriginsOriginIdRoute: OriginsOriginIdRoute,
   QuizQuizIdRoute: QuizQuizIdRoute,

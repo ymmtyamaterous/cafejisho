@@ -16,32 +16,11 @@ export default function Footer() {
               style={{ fontFamily: "'Zen Maru Gothic', sans-serif" }}
             >
               <span className="text-2xl font-black text-white">☕ cafejisho</span>
-              <span
-                className="text-xs font-black text-white px-2 py-0.5 rounded-lg"
-                style={{ background: "#C49A6C", border: "2px solid #E8C99A" }}
-              >
-                β
-              </span>
             </div>
             <p className="text-xs font-bold mb-4" style={{ color: "#C49A6C" }}>
               コーヒーをゲーム感覚で楽しく学べる学習プラットフォーム
             </p>
-            <div className="flex gap-3">
-              {["𝕏", "📸", "▶"].map((icon, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black transition-all duration-100 hover:-translate-y-0.5"
-                  style={{
-                    background: "#3D2412",
-                    border: "1.5px solid #C49A6C",
-                    color: "#C49A6C",
-                  }}
-                >
-                  {icon}
-                </button>
-              ))}
-            </div>
+
           </div>
 
           {/* 学ぶ */}
@@ -52,7 +31,6 @@ export default function Footer() {
                 { label: "入門コース", to: "/courses" },
                 { label: "産地辞典", to: "/origins" },
                 { label: "クイズ", to: "/quiz" },
-                { label: "プレミアム ⭐", to: "/premium" },
               ].map(({ label, to }) => (
                 <li key={label}>
                   <Link
@@ -94,7 +72,6 @@ export default function Footer() {
             <h3 className="text-xs font-black mb-4" style={{ color: "#E8C99A" }}>その他</h3>
             <ul className="space-y-2 list-none">
               {[
-                { label: "プレミアム ⭐", to: "/premium" },
                 { label: "ブックマーク", to: "/bookmarks" },
                 { label: "プロフィール", to: "/profile" },
               ].map(({ label, to }) => (
@@ -124,8 +101,8 @@ export default function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-bold" style={{ color: "rgba(196,154,108,0.5)" }}>
           <span>© 2026 Cafe Jisho. All rights reserved.</span>
           <div className="flex gap-4">
-            <button type="button" className="hover:opacity-80 transition-opacity" style={{ color: "rgba(196,154,108,0.5)" }}>プライバシーポリシー</button>
-            <button type="button" className="hover:opacity-80 transition-opacity" style={{ color: "rgba(196,154,108,0.5)" }}>利用規約</button>
+            <Link to="/privacy" className="hover:opacity-80 transition-opacity no-underline" style={{ color: "rgba(196,154,108,0.5)" }}>プライバシーポリシー</Link>
+            <Link to="/terms" className="hover:opacity-80 transition-opacity no-underline" style={{ color: "rgba(196,154,108,0.5)" }}>利用規約</Link>
           </div>
         </div>
       </div>
